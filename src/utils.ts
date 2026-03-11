@@ -66,12 +66,11 @@ export const fetchYahooPrices = async (symbols: string[]) => {
       }
 
       const url = getYahooChartUrl(symbol);
-      const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`;
+      const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(url)}`;
       
       try {
         const response = await fetch(proxyUrl);
-        const json = await response.json();
-        const data = JSON.parse(json.contents);
+        const data = await response.json();
         const result = data.chart?.result?.[0];
         
         if (result) {
