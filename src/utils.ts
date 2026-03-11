@@ -1,5 +1,3 @@
-import type { Stock } from './types';
-
 const ALPHA_VANTAGE_KEY = 'Z0APBBRUSGC2N08B';
 
 export const formatCurrency = (amount: number, currency: string = 'CAD') => {
@@ -155,12 +153,6 @@ export const getExchangeRate = async () => {
     console.error('Bank of Canada exchange rate error:', e);
     return 1.40;
   }
-};
-
-export const testDirectApi = async (symbol: string) => {
-  const apiSymbol = mapSymbol(symbol);
-  const response = await fetch(`https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${apiSymbol}&apikey=${ALPHA_VANTAGE_KEY}`);
-  return await response.json();
 };
 
 export const downloadCSV = (stocks: any[], exchangeRate: number, tsxPrice: number | null) => {

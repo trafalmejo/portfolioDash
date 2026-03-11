@@ -8,7 +8,6 @@ import {
   fetchAlphaPrices,
   getExchangeRate,
   downloadCSV,
-  testDirectApi,
   getYahooChartUrl,
 } from "./utils";
 import "./App.css";

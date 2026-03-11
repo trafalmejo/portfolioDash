@@ -1,6 +1,5 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
-import yahooFinance from 'yahoo-finance2';
 
 const ALPHA_VANTAGE_KEY = 'Z0APBBRUSGC2N08B';
 
