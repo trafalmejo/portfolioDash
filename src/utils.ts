@@ -29,7 +29,7 @@ const mapSymbol = (s: string) => {
   return mapped;
 };
 
-// Helper to get the Yahoo Chart API URL (same logic as proxy)
+// Helper to get the Yahoo Chart API URL
 export const getYahooChartUrl = (s: string) => {
   if (s === 'CASH') return '';
   let mapped = s;
@@ -45,24 +45,100 @@ export const getYahooChartUrl = (s: string) => {
   return `https://query2.finance.yahoo.com/v8/finance/chart/${mapped}?interval=1d&range=1d`;
 };
 
-// Fetch from our local proxy which uses yahoo-finance2
+// Fetch through our local proxy when in DEV mode, otherwise use a CORS proxy for static hosting
 export const fetchYahooPrices = async (symbols: string[]) => {
+  if (import.meta.env.DEV) {
+    try {
+      const response = await fetch(`/api/yahoo-prices?symbols=${symbols.join(',')}`);
+      const data = await response.json();
+      return data.prices || {};
+    } catch (e) {
+      console.error('Local Yahoo proxy failed, falling back...', e);
+    }
+  }
+
   try {
-    const response = await fetch(`/api/yahoo-prices?symbols=${symbols.join(',')}`);
-    const data = await response.json();
-    return data.prices || {};
+    const prices: Record<string, number> = {};
+    
+    // Batch process to avoid too many requests
+    for (const symbol of symbols) {
+      if (symbol === 'CASH') {
+        prices[symbol] = 1.0;
+        continue;
+      }
+
+      const url = getYahooChartUrl(symbol);
+      const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`;
+      
+      try {
+        const response = await fetch(proxyUrl);
+        const json = await response.json();
+        const data = JSON.parse(json.contents);
+        const result = data.chart?.result?.[0];
+        
+        if (result) {
+          const meta = result.meta;
+          prices[symbol] = meta?.regularMarketPrice || meta?.chartPreviousClose || 0;
+        } else {
+          prices[symbol] = 0;
+        }
+      } catch (e) {
+        console.error(`Yahoo fetch failed for ${symbol}:`, e);
+        prices[symbol] = 0;
+      }
+    }
+    return prices;
   } catch (e) {
     console.error('Failed to fetch Yahoo prices:', e);
     return {};
   }
 };
 
-// Fetch from our local proxy which uses Alpha Vantage
+// Fetch Alpha Vantage through local proxy in DEV, otherwise direct
 export const fetchAlphaPrices = async (symbols: string[]) => {
+  if (import.meta.env.DEV) {
+    try {
+      const response = await fetch(`/api/alpha-prices?symbols=${symbols.join(',')}`);
+      const data = await response.json();
+      return data.prices || {};
+    } catch (e) {
+      console.error('Local Alpha proxy failed, falling back...', e);
+    }
+  }
+
   try {
-    const response = await fetch(`/api/alpha-prices?symbols=${symbols.join(',')}`);
-    const data = await response.json();
-    return data.prices || {};
+    const prices: Record<string, number> = {};
+    
+    for (const symbol of symbols) {
+      if (symbol === 'CASH') {
+        prices[symbol] = 1.0;
+        continue;
+      }
+
+      const apiSymbol = mapSymbol(symbol);
+      const url = `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${apiSymbol}&apikey=${ALPHA_VANTAGE_KEY}`;
+      
+      try {
+        const response = await fetch(url);
+        const data = await response.json();
+        
+        if (data['Note'] || data['Information']) {
+          prices[symbol] = 0;
+        } else {
+          const priceStr = data['Global Quote']?.['05. price'];
+          prices[symbol] = priceStr ? parseFloat(priceStr) : 0;
+        }
+        
+        // Respect Alpha Vantage free tier limits (12s delay if more than 1)
+        if (symbols.length > 1) {
+          await new Promise(r => setTimeout(r, 12000));
+        }
+      } catch (e) {
+        console.error(`Alpha fetch failed for ${symbol}:`, e);
+        prices[symbol] = 0;
+      }
+    }
+    return prices;
   } catch (e) {
     console.error('Failed to fetch Alpha prices:', e);
     return {};

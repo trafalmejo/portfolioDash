@@ -22,6 +22,7 @@ const mapSymbolForAlpha = (s: string) => {
 };
 
 export default defineConfig({
+  base: "/portfolioDash/",
   plugins: [
     react(),
     {
