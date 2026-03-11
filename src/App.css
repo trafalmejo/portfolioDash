@@ -1,0 +1,254 @@
+:root {
+  --primary-color: #2563eb;
+  --secondary-color: #64748b;
+  --bg-color: #f8fafc;
+  --text-color: #1e293b;
+  --border-color: #e2e8f0;
+  --success-color: #16a34a;
+  --error-color: #dc2626;
+  --white: #ffffff;
+}
+
+body {
+  margin: 0;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+}
+
+.app-container {
+  max-width: 1200px;
+  width: 100%;
+  padding: 2rem;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+h1 {
+  font-size: 1.875rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.controls {
+  display: flex;
+  gap: 1rem;
+}
+
+button {
+  padding: 0.6rem 1.2rem;
+  font-weight: 600;
+  border-radius: 0.375rem;
+  border: 1px solid var(--border-color);
+  background-color: var(--white);
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+
+button:hover {
+  background-color: var(--bg-color);
+  transform: translateY(-1px);
+}
+
+/* Control Buttons */
+.controls button {
+  padding: 0.6rem 1.2rem;
+  font-weight: 600;
+  border-radius: 0.375rem;
+  border: 1px solid var(--border-color);
+  background-color: var(--white);
+  color: var(--text-color); /* Ensure visible text */
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.controls button:hover {
+  background-color: #f1f5f9;
+  border-color: #cbd5e1;
+}
+
+.controls button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.yahoo-btn {
+  background-color: #720e9e !important;
+  color: white !important;
+  border-color: #720e9e !important;
+}
+
+.yahoo-btn:hover {
+  background-color: #5b0b7e !important;
+}
+
+.alpha-btn {
+  background-color: #2563eb !important;
+  color: white !important;
+  border-color: #2563eb !important;
+}
+
+.alpha-btn:hover {
+  background-color: #1d4ed8 !important;
+}
+
+.toggle-btn {
+  background-color: #f1f5f9 !important;
+  color: #475569 !important;
+  border: 1px solid #cbd5e1 !important;
+}
+
+.toggle-btn:hover {
+  background-color: #e2e8f0 !important;
+  color: #1e293b !important;
+}
+
+.table-container {
+  background: var(--white);
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+th {
+  padding: 0.75rem 1rem;
+  font-weight: 600;
+  border-bottom: 2px solid var(--border-color);
+  background-color: #f1f5f9;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+}
+
+td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--border-color);
+  font-size: 0.875rem;
+}
+
+tr:last-child td {
+  border-bottom: none;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.gain {
+  color: var(--success-color);
+  font-weight: 500;
+}
+
+.loss {
+  color: var(--error-color);
+  font-weight: 500;
+}
+
+.summary-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.card {
+  background: var(--white);
+  padding: 1.25rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.card h3 {
+  margin: 0 0 0.5rem 0;
+  font-size: 0.875rem;
+  color: var(--secondary-color);
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+}
+
+.card p {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.price-cell {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+.verify-link {
+  text-decoration: none;
+  font-size: 0.75rem;
+  color: #720e9e;
+  opacity: 0.6;
+  transition: opacity 0.2s;
+  padding: 2px 4px;
+  border-radius: 4px;
+  background: #f3e8ff;
+}
+
+.verify-link:hover {
+  opacity: 1;
+  background: #e9d5ff;
+}
+
+.price-container {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.4rem;
+}
+
+.api-link {
+  font-size: 0.65rem;
+  text-decoration: none;
+  background: #f1f5f9;
+  color: #64748b;
+  padding: 1px 4px;
+  border-radius: 3px;
+  border: 1px solid var(--border-color);
+  text-transform: uppercase;
+  font-weight: 700;
+  opacity: 0.6;
+}
+
+.api-link:hover {
+  opacity: 1;
+  background: #e2e8f0;
+  color: var(--primary-color);
+}
+
+.price-source {
+  font-weight: 500;
+}
+
+.price-yahoo {
+  color: #720e9e; /* Yahoo Purple */
+}
+
+.price-alpha {
+  color: #2563eb; /* Alpha Blue */
+}
+
+.footer-note {
+  margin-top: 2rem;
+  font-size: 0.75rem;
+  color: var(--secondary-color);
+  text-align: center;
+}
